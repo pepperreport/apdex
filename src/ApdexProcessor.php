@@ -6,10 +6,19 @@ namespace Pepperreport\Apdex;
 
 class ApdexProcessor
 {
+    /**
+     * @var array
+     */
     private $metrics;
 
+    /**
+     * @var int
+     */
     private $threshold;
 
+    /**
+     * @var int
+     */
     private $apdexTotal;
 
     const SATISFIED = 'satisfied';
@@ -22,7 +31,7 @@ class ApdexProcessor
         $this->threshold = $threshold;
     }
 
-    public function process()
+    public function process(): ApdexDetail
     {
         $baseApdexT = $this->threshold * 4;
         $apdexIndice = [self::SATISFIED => 0, self::TOLERATING => 0, self::FRUSTRATED => 0];
