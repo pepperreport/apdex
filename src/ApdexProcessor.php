@@ -11,10 +11,7 @@ class ApdexProcessor
     private $baseApdex;
 
     private $apdexTotal;
-
-    private $minResponseTime = 0;
-    private $maxResponseTime = 0;
-
+    
     public function __construct(array $metrics, int $baseApdex = 500)
     {
         $this->metrics = $metrics;
@@ -26,8 +23,6 @@ class ApdexProcessor
         $baseApdexT = $this->baseApdex * 4;
         $apdexIndice = ['u' => 0, 't' => 0, 'i' => 0];
         foreach ($this->metrics as $metric) {
-            $responseTime += $metric->getResponseTime();
-
             if ($metric->getResponseTime() == 0) {
                 ++$apdexIndice['i'];
             } elseif ($metric->getResponseTime() < $this->baseApdex) {
@@ -36,13 +31,6 @@ class ApdexProcessor
                 ++$apdexIndice['t'];
             } else {
                 ++$apdexIndice['i'];
-            }
-
-            if ($this->minResponseTime > $metric->getResponseTime() || $this->minResponseTime == null) {
-                $this->minResponseTime = $metric->getResponseTime();
-            }
-            if ($this->maxResponseTime < $metric->getResponseTime()) {
-                $this->maxResponseTime = $metric->getResponseTime();
             }
         }
 
