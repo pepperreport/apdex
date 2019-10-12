@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pepperreport\Apdex;
 
 class ApdexDetail
@@ -22,16 +24,16 @@ class ApdexDetail
 
     public function getSatisfiedPercent()
     {
-        return (100/$this->totalMetrics)*$this->apdexCounters['u'];
+        return (100 / $this->totalMetrics) * $this->apdexCounters['u'];
     }
 
     public function getToleratedPercent()
     {
-        return (100/$this->totalMetrics)*$this->apdexCounters['t'];
+        return (100 / $this->totalMetrics) * $this->apdexCounters['t'];
     }
 
     public function getFrustratedPercent()
     {
-        return (100/$this->totalMetrics)*$this->apdexCounters['i'];
+        return (100 / $this->totalMetrics) * $this->apdexCounters['i'];
     }
 }
