@@ -1,9 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pepperreport\Apdex;
 
 class Metric implements MetricInterface
 {
+    /**
+     * @var int
+     */
     private $responseTime;
 
     public function setResponseTime(int $responseTime)

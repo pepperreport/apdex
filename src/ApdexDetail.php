@@ -1,11 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pepperreport\Apdex;
 
 class ApdexDetail
 {
+    /**
+     * @var int
+     */
     private $apdexCounters;
+
+    /**
+     * @var array|null
+     */
     private $processedApdex;
+
+    /**
+     * @var int
+     */
     private $totalMetrics;
 
     public function __construct($apdexCounters = 0, $processedApdex = null, $totalMetrics = 1)
@@ -20,18 +33,18 @@ class ApdexDetail
         return $this->processedApdex;
     }
 
-    public function getSatisfiedPercent()
+    public function getSatisfiedPercent(): int
     {
-        return (100/$this->totalMetrics)*$this->apdexCounters['u'];
+        return (100 / $this->totalMetrics) * $this->apdexCounters['u'];
     }
 
-    public function getToleratedPercent()
+    public function getToleratedPercent(): int
     {
-        return (100/$this->totalMetrics)*$this->apdexCounters['t'];
+        return (100 / $this->totalMetrics) * $this->apdexCounters['t'];
     }
 
-    public function getFrustratedPercent()
+    public function getFrustratedPercent(): int
     {
-        return (100/$this->totalMetrics)*$this->apdexCounters['i'];
+        return (100 / $this->totalMetrics) * $this->apdexCounters['i'];
     }
 }

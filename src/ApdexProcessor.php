@@ -1,51 +1,54 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pepperreport\Apdex;
 
 class ApdexProcessor
 {
+    /**
+     * @var array
+     */
     private $metrics;
 
-    private $baseApdex;
+    /**
+     * @var int
+     */
+    private $threshold;
 
+    /**
+     * @var int
+     */
     private $apdexTotal;
 
-    private $minResponseTime = 0;
-    private $maxResponseTime = 0;
+    const SATISFIED = 'satisfied';
+    const TOLERATING = 'tolerating';
+    const FRUSTRATED = 'frustrated';
 
-    public function __construct(array $metrics, int $baseApdex = 500)
+    public function __construct(array $metrics, int $threshold = 500)
     {
         $this->metrics = $metrics;
-        $this->baseApdex = $baseApdex;
+        $this->threshold = $threshold;
     }
 
-    public function process()
+    public function process(): ApdexDetail
     {
-        $baseApdexT = $this->baseApdex*4;
-        $apdexIndice = ['u' => 0, 't' => 0, 'i' => 0];
+        $baseApdexT = $this->threshold * 4;
+        $apdexIndice = [self::SATISFIED => 0, self::TOLERATING => 0, self::FRUSTRATED => 0];
         foreach ($this->metrics as $metric) {
-            $responseTime += $metric->getResponseTime();
-
             if ($metric->getResponseTime() == 0) {
-                $apdexIndice['i']++;
-            } elseif ($metric->getResponseTime() < $this->baseApdex) {
-                $apdexIndice['u']++;
+                ++$apdexIndice[self::FRUSTRATED];
+            } elseif ($metric->getResponseTime() < $this->threshold) {
+                ++$apdexIndice[self::SATISFIED];
             } elseif ($metric->getResponseTime() < $baseApdexT) {
-                $apdexIndice['t']++;
+                ++$apdexIndice[self::TOLERATING];
             } else {
-                $apdexIndice['i']++;
-            }
-
-            if ($this->minResponseTime>$metric->getResponseTime() || $this->minResponseTime == null) {
-                $this->minResponseTime = $metric->getResponseTime();
-            }
-            if ($this->maxResponseTime<$metric->getResponseTime()) {
-                $this->maxResponseTime = $metric->getResponseTime();
+                ++$apdexIndice[self::FRUSTRATED];
             }
         }
 
-        if ($apdexIndice['t'] > 0 || $apdexIndice['i'] > 0) {
-            $this->apdexTotal = ($apdexIndice['u'] + $apdexIndice['t'] / 2 )/ count($this->metrics);
+        if ($apdexIndice[self::TOLERATING] > 0 || $apdexIndice[self::FRUSTRATED] > 0) {
+            $this->apdexTotal = ($apdexIndice[self::SATISFIED] + $apdexIndice[self::TOLERATING] / 2) / count($this->metrics);
         } else {
             $this->apdexTotal = 1;
         }
