@@ -9,7 +9,7 @@ Apdex provides three thresholds estimating end user satisfaction, **satisfied**,
 - **Tolerating:** Response time between T seconds and 4T seconds.
 - **Frustrating:** Response time greater than 4 T seconds.
 
-###How to calculate your Apdex :
+### How to calculate your Apdex :
 ```php
 $apdexProcessor = new ApdexProcessor($metrics, $threshold);
 $apdexDetail = $apdexProcessor->process();
